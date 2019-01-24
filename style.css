@@ -1,0 +1,38 @@
+#app{
+    width: 600px;
+    margin: 0 auto;
+}
+a{
+    text-decoration: none;
+    background: orange;
+    color: black;
+}
+.select{
+    height: 40px;
+}
+.select div{
+    width: 195px;
+    float: left;
+}
+.fixed_week{
+    clear: both;
+}
+.fixed_week div{
+    float: left;
+    width: 82px;
+}
+.cal_list{
+    clear: both;
+    position: relative;
+    top: 10px
+}
+.cal_list div{
+    float: left;
+    width: 76px;
+    height: 40px;
+    text-align: center;
+    border: 2px solid white;
+}
+.cal_list div:hover{
+    border: 2px solid yellow;
+}

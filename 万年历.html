@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>万年历</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../js/jquery1.10.2.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <!-- <script src="main.js"></script> -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <div class="select">
+            <div class="year">
+                <a href="javacript:void(0);" onclick="year_plus()">上一年</a>
+                <a href="javacript:viod(0)" onclick="year_below()">下一年</a>
+                <select id="year" onchange="change_cal()"></select>
+            </div>
+            <div class="month">
+                <select id="month" onchange="change_cal()"></select>
+                <a href="javacript:viod(0)" onclick="month_plus()">上一月</a>
+                <a href="javacript:viod(0)" onclick="month_below()">下一月</a>
+            </div>
+            <div class="today">
+                <a href="javacript:viod(0)" onclick="today()">回到今天</a>
+            </div>
+        </div>
+
+        <!-- js 生成 -->
+        <div class="fixed_week"></div>
+        
+        <div class="cal_list">
+
+        </div>
+
+    </div>
+
+    <script>
+        let date_obj = new Date()
+        let real_year = date_obj.getFullYear() // 当前真实年份
+        let real_month = date_obj.getMonth() + 1 // 当前真实月份
+        let current_year = real_year // 当期年
+        let current_month = real_month // 当前月
+
+        $(function(){
+            // 生成年份选择
+            generate_year()
+            // 生成月份选择
+            generate_month()
+            // 生成固定星期
+            generate_fixed_week()
+            // 生成日历
+            generate_cal_list(current_year, current_month)
+        })
+
+        // 上一年
+        function year_plus(){
+            generate_cal_list(current_year -= 1, current_month)
+            generate_year()
+        }
+
+        // 下一年
+        function year_below(){
+            generate_cal_list(current_year += 1, current_month)
+            generate_year()
+        }
+
+        // 上一月
+        function month_plus(){
+            generate_cal_list(current_year, current_month -= 1)
+            if(current_month < 1){
+                current_month = 12
+                current_year--
+                generate_year()
+            }
+            generate_month()
+        }
+
+        // 下一月
+        function month_below(){
+            generate_cal_list(current_year, current_month += 1)
+            if(current_month > 12){
+                current_month = 1
+                current_year++
+                generate_year()
+            }
+            generate_month()
+        }
+
+        function today(){
+            current_year = real_year
+            current_month = real_month
+            generate_year()
+            generate_month()
+            generate_cal_list(current_year, current_month)
+        }
+
+        function change_cal(){
+            let current_year = $("#year").val()
+            let current_month = $("#month").val()
+            console.log(current_year)
+            console.log(current_month)
+            // 每次选择后 重新生成日历
+            generate_cal_list(current_year, current_month)
+        }
+
+        // 生成日历
+        function generate_cal_list(current_year, current_month){
+            let cal_html = ""
+            let cur_weeks = weeks(current_year, current_month) // 当前月1号是星期几  2
+            // return false
+            let month_days_counts = month_days_count(current_year, current_month);
+            for(let i = 1, j = 1; i <= month_days_counts, j <= month_days_counts; i++){
+                if(i < cur_weeks){
+                    text = "-"
+                }else{
+                    text = j
+                    j++
+                }
+                cal_html += "<div>"+text+"</div>"
+            }
+            $('.cal_list').html(cal_html)
+        }
+
+        function generate_fixed_week(){
+            let fixed_week_html = ""
+            for(let i = 1; i <= 7; i++){
+                i = i == 7 ? "天" : i
+                fixed_week_html += "<div>星期"+i+"</div>"
+            }
+            $(".fixed_week").html(fixed_week_html)
+        }
+
+        function generate_year(){
+            let year_html = ""
+            for(let i = 1950; i <= 2050; i++){
+                let selected = i == current_year ? "selected" : ""
+                year_html += "<option value='"+i+"' "+selected+">"+i+"</option>"
+            }
+            $("#year").html(year_html)
+        }
+
+        function generate_month(){
+            let month_html = ""
+            for(let i = 1; i <= 12; i++){
+                let selected = i == current_month ? "selected" : ""
+                month_html += "<option value='"+i+"' "+selected+">"+i+"</option>"
+            }
+            $("#month").html(month_html)
+        }
+
+        // 获取某年某月有多少天
+        function month_days_count(year, month){
+            return new Date(year, parseInt(month, 10), 0).getDate()
+        }
+
+        // 获取某年某月的1号是星期几
+        function weeks(year, month){
+            return new Date(year, month - 1, 1).getDay()
+        }
+    </script>
+</body>
+</html>
