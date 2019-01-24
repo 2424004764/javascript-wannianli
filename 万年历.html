@@ -119,7 +119,11 @@
                     text = j
                     j++
                 }
-                cal_html += "<div>"+text+"</div>"
+                let style = ""
+                if(current_year == real_year && (i - 1) == new Date().getDate() && current_month == real_month){
+                    style = "style='border:2px solid red'"
+                }
+                cal_html += "<div "+style+">"+text+"</div>"
             }
             $('.cal_list').html(cal_html)
         }
